@@ -135,7 +135,11 @@ bool MainWindow::isPlayable(int index)
 {
     int row = getRow(index);
     int col = getColumn(index);
-    return (row + col) % 2 != 0;
+    bool isBlack = (row + col) % 2 != 0;
+    if (isBlack && index >= 0 && index < 100)
+        return true;
+    else
+        return false;
 }
 
 void MainWindow::updateWidgets()
@@ -182,11 +186,34 @@ void MainWindow::onClickBox(int index)
     {
         if (markedIndices.empty())
         {
-            // wybór pionka
-            if (boardStatus[index] != STATUS_EMPTY && boardStatus[index] == myColor)
+            // sprawdzenie, czy jest obowiązkowe bicie
+            auto allHumanCaptures = getAllAvailableHumanCaptures();
+            if (allHumanCaptures.empty())
             {
-                markedIndices.push_back(index);
-                updateWidgets();
+                // wybór pionka
+                if (boardStatus[index] != STATUS_EMPTY && boardStatus[index] == myColor)
+                {
+                    markedIndices.push_back(index);
+                    updateWidgets();
+                }
+            }
+            else
+            {
+                // wybór pionka, jeśli może zbić przeciwnika
+                auto hereCaptures = getValidHumanCaptures(index);
+                if (hereCaptures.empty())
+                {
+                    // ten pionek nie może bić - nie zaznaczam pionka
+                }
+                else
+                {
+                    // wybór pionka
+                    if (boardStatus[index] != STATUS_EMPTY && boardStatus[index] == myColor)
+                    {
+                        markedIndices.push_back(index);
+                        updateWidgets();
+                    }
+                }
             }
         }
         else
@@ -202,17 +229,10 @@ void MainWindow::onClickBox(int index)
             else
             {
                 // wybór pola docelowego
-                if (isValidTarget(sourceIndex, index))
+                auto allHumanCaptures = getAllAvailableHumanCaptures();
+                if (!allHumanCaptures.empty())
                 {
-                    // ruch
-                    markedIndices.push_back(index);
-                    moveMarkedPiece();
-                    updateWidgets();
-                    turn = COMPUTER_TURN;
-                    doComputerTurn();
-                }
-                else
-                {
+                    // obowiązkowe bicie
                     int capt = getHumanCapturedIndex(sourceIndex, index);
                     if (capt >= 0)
                     {
@@ -223,6 +243,32 @@ void MainWindow::onClickBox(int index)
                         updateWidgets();
                         turn = COMPUTER_TURN;
                         doComputerTurn();
+                    }
+                }
+                else
+                {
+                    if (isValidTarget(sourceIndex, index))
+                    {
+                        // ruch
+                        markedIndices.push_back(index);
+                        moveMarkedPiece();
+                        updateWidgets();
+                        turn = COMPUTER_TURN;
+                        doComputerTurn();
+                    }
+                    else
+                    {
+                        int capt = getHumanCapturedIndex(sourceIndex, index);
+                        if (capt >= 0)
+                        {
+                            // bicie
+                            markedIndices.push_back(capt);
+                            markedIndices.push_back(index);
+                            captureMarkedPiece();
+                            updateWidgets();
+                            turn = COMPUTER_TURN;
+                            doComputerTurn();
+                        }
                     }
                 }
             }
