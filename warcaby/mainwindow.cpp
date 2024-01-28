@@ -524,9 +524,16 @@ void MainWindow::doComputerTurn()
         captureMarkedPiece();
         updateWidgets();
         turn = HUMAN_TURN;
+
+        std::vector<AvailableMovement> humanMovements = getAllAvailableHumanMovements();
+        if (humanMovements.empty())
+        {
+            //gracz nie może się ruszać
+            turn = NO_TURN;
+            QMessageBox::about(this, "Gra", "Przegrałeś!");
+        }
         return;
     }
-
 
     std::vector<AvailableMovement> currentMovements = getAllAvailableComputerMovements();
     if (currentMovements.empty())
