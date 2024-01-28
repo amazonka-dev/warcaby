@@ -29,7 +29,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     //rozmiar pól
     QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sizePolicy.setHeightForWidth(true);
 
     //stworzenie szachownicy 10x10
     for (int index = 0; index < 100; index++)
@@ -53,16 +52,16 @@ MainWindow::MainWindow(QWidget *parent)
             PieceWidget *whitePiece = new PieceWidget(square, PieceWidget::WHITE);
             whitePiece->hide();
             QSizePolicy whiteSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-            whiteSizePolicy.setHeightForWidth(true);
             whitePiece->setSizePolicy(whiteSizePolicy);
+            whitePiece->setFixedSize(35, 34);
             whitePieces[index] = whitePiece;
 
             // czarne pionki
             PieceWidget *blackPiece = new PieceWidget(square, PieceWidget::BLACK);
             blackPiece->hide();
             QSizePolicy blackSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-            blackSizePolicy.setHeightForWidth(true);
             blackPiece->setSizePolicy(blackSizePolicy);
+            blackPiece->setFixedSize(35, 34);
             blackPieces[index] = blackPiece;
         }
 

@@ -28,7 +28,7 @@ void PieceWidget::paintEvent(QPaintEvent *) {
             break;
     }
     QRect parentRect = this->parentWidget()->rect();
-    int radius = qMin(parentRect.width(), parentRect.height()) * 0.5;
+    int radius = qMin(parentRect.width() - 4, parentRect.height() - 4) * 0.5;
     QPoint center(parentRect.width() / 2, parentRect.height() / 2);
     painter.drawEllipse(center, radius, radius);
 }
