@@ -1,0 +1,12 @@
+*.zip
+.vscode
+
+*.aux
+*.log
+*.dvi
+*.fls
+*.out
+*.toc
+*.fdb_latexmk
+*.synctex.gz
+
